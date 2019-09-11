@@ -23,8 +23,15 @@ export default {
     }
   },
   methods: {
-    save() {
-      this.$http.post()
+    //保存分类
+    async save() {
+      const res = await this.$http.post('categories', this.model)
+      console.log(res)
+      this.$router.push('/categories/list')
+      this.$message({
+        type: 'success',
+        message: '保存成功'
+      })
     }
   }
 }

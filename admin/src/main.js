@@ -5,8 +5,8 @@ import router from './router'
 
 Vue.config.productionTip = false
 
-import http from "./http";
-Vue.prototype.$http = http
+import http from './plugins/http' //封装axios
+Vue.prototype.$http = http //挂载
 
 new Vue({
   router,
