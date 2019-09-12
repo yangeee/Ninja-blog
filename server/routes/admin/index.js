@@ -5,7 +5,11 @@ module.exports = app => {
   app.use('/admin/api', router) //使用 express.Router类来让每一个请求前面自动加上这个路径
 
   router.post('/categories', async (req, res) => {
-    const model = await Category.create(req.body)
+    const model = await Category.create(req.body) //调用数据库的表头create方法创建数据
     res.send(model)
+  })
+  router.get('/categories', async (req, res) => {
+    const items = await Category.find().limit() //调用数据库的表头create方法创建数据
+    res.send(items)
   })
 }
