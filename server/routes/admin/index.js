@@ -8,8 +8,16 @@ module.exports = app => {
     const model = await Category.create(req.body) //调用数据库的表头create方法创建数据
     res.send(model)
   })
+  router.put('/categories/:id', async (req, res) => {
+    const model = await Category.findByIdAndUpdate(req.params.id, req.body) //调用数据库的表头create方法创建数据
+    res.send(model)
+  })
   router.get('/categories', async (req, res) => {
     const items = await Category.find().limit() //调用数据库的表头create方法创建数据
     res.send(items)
+  })
+  router.get('/categories/:id', async (req, res) => {
+    const model = await Category.findById(req.params.id)
+    res.send(model)
   })
 }
