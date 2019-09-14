@@ -19,7 +19,9 @@ module.exports = app => {
     })
   })
   router.get('/categories', async (req, res) => {
-    const items = await Category.find().limit() //调用数据库的表头create方法创建数据
+    const items = await Category.find()
+      .populate('parent')
+      .limit() //调用数据库的表头create方法创建数据
     res.send(items)
   })
   router.get('/categories/:id', async (req, res) => {
