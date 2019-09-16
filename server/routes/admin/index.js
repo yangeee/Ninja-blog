@@ -5,6 +5,7 @@ module.exports = app => {
   })
   app.use(
     '/admin/api/rest/:resource',
+    //封装通用接口
     async (req, res, next) => {
       const modelName = require('inflection').classify(req.params.resource)
       req.Model = require(`../../models/${modelName}`)
