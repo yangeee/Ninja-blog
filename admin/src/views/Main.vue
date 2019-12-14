@@ -1,7 +1,7 @@
 <template>
   <el-container style="height: 100vh;">
     <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
-      <el-menu router :default-openeds="['1', '3']">
+      <el-menu router :default-openeds="['1', '3']" :default-active="activeIndex" @select="handleSelect">
         <el-submenu index="1">
           <template slot="title">
             <i class="el-icon-message">内容管理</i>
@@ -14,7 +14,7 @@
           <el-menu-item-group>
             <template slot="title">物品</template>
             <el-menu-item index="/items/create">新建物品</el-menu-item>
-            <el-menu-item index="/items/list">分类列表</el-menu-item>
+            <el-menu-item index="/items/list">物品列表</el-menu-item>
           </el-menu-item-group>
           <!-- <el-submenu index="1-4">
             <template slot="title">选项4</template>
@@ -66,7 +66,20 @@ export default {
       address: '上海市普陀区金沙江路 1518 弄'
     };
     return {
-      tableData: Array(20).fill(item)
+      tableData: Array(20).fill(item),
+      activeIndex: undefined
+    }
+  },
+  methods: {
+    handleSelect(index) {
+      this.activeIndex = index
+    }
+  },
+  watch: {
+    $route() {
+      let url = window.location.hash.substring(1)
+      console.log(url)
+      this.handleSelect(url)
     }
   }
 };

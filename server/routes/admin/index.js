@@ -3,16 +3,6 @@ module.exports = app => {
   const router = express.Router({
     mergeParams: true
   })
-  app.use(
-    '/admin/api/rest/:resource',
-    //封装通用接口
-    async (req, res, next) => {
-      const modelName = require('inflection').classify(req.params.resource)
-      req.Model = require(`../../models/${modelName}`)
-      next()
-    },
-    router
-  ) //使用 express.Router类来让每一个请求前面自动加上这个路径
 
   router.post('/', async (req, res) => {
     const model = await req.Model.create(req.body) //调用数据库的表头create方法创建数据
@@ -42,4 +32,24 @@ module.exports = app => {
     const model = await req.Model.findById(req.params.id)
     res.send(model)
   })
+
+  //图片上传接口
+  const multer = require('multer')
+  const upload = multer({ dest: __dirname + '../../../uploads' })
+  app.post('/admin/api/upload', upload.single('file'), async (req, res) => {
+    const file = req.file
+    file.url = `http://localhost:3000/uploads/${file.filename}`
+    res.send(file)
+  })
+
+  app.use(
+    '/admin/api/rest/:resource',
+    //封装通用接口
+    async (req, res, next) => {
+      const modelName = require('inflection').classify(req.params.resource)
+      req.Model = require(`../../models/${modelName}`)
+      next()
+    },
+    router
+  ) //使用 express.Router类来让每一个请求前面自动加上这个路径
 }

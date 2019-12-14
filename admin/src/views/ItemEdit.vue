@@ -6,7 +6,15 @@
         <el-input v-model="model.name"></el-input>
       </el-form-item>
       <el-form-item label="图标">
-        <el-input v-model="model.icon"></el-input>
+        <el-upload
+          class="items-uploader"
+          :action="$http.defaults.baseURL+'/upload'"
+          :show-file-list="false"
+          :on-success="afterUpload"
+        >
+          <img v-if="model.icon" :src="model.icon" class="items" />
+          <i v-else class="el-icon-plus items-uploader-icon"></i>
+        </el-upload>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" native-type="submit">保存</el-button>
@@ -29,9 +37,13 @@ export default {
     }
   },
   created() {
-    this.id && this.fetch()
+    this.id && this.fetch()//有id就拉取数据进行编辑
   },
+
   methods: {
+    afterUpload(res) {
+      this.$set(this.model, 'icon', res.url)
+    },
     //保存分类
     async save() {
       let res
@@ -41,6 +53,7 @@ export default {
         res = await this.$http.post('rest/items', this.model)
       }
       this.$router.push('/items/list')
+      this.$emit
       this.$message({
         type: 'success',
         message: '保存成功'
@@ -50,12 +63,34 @@ export default {
       const res = await this.$http.get(`rest/items/${this.id}`)
       this.model = res.data
     },
-
   },
 
 }
 </script>
 
 
-<style scoped>
+<style>
+.items-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.items-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+.items-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+.items {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
 </style>
