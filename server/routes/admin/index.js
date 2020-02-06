@@ -2,7 +2,7 @@ module.exports = app => {
   const express = require('express')
   const router = express.Router({
     mergeParams: true
-  })
+  }) //router代表/admin/api/rest/:resource
 
   router.post('/', async (req, res) => {
     const model = await req.Model.create(req.body) //调用数据库的表头create方法创建数据
@@ -42,14 +42,14 @@ module.exports = app => {
     res.send(file)
   })
 
+  //封装通用接口
   app.use(
-    '/admin/api/rest/:resource',
-    //封装通用接口
+    '/admin/api/rest/:resource', //api的url命名
     async (req, res, next) => {
       const modelName = require('inflection').classify(req.params.resource)
       req.Model = require(`../../models/${modelName}`)
       next()
-    },
+    }, //从请求中得到所请求的资源种类名，自动添加到
     router
-  ) //使用 express.Router类来让每一个请求前面自动加上这个路径
+  ) //再使用 express.Router类来让每一个请求前面自动加上这个路径
 }
