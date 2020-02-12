@@ -89,19 +89,21 @@
                   class="items-uploader"
                   :action="$http.defaults.baseURL+'/upload'"
                   :show-file-list="false"
-                  :on-success="afterUpload"
+                  :on-success="res => $set(item,'icon', res.url)"
                 >
-                  <img v-if="model.icon" :src="model.icon" class="items" />
+                  <img v-if="item.icon" :src="item.icon" class="items" />
                   <i v-else class="el-icon-plus items-uploader-icon"></i>
                 </el-upload>
               </el-form-item>
               <el-form-item label="描述">
-                <el-textarea v-model="model.description"></el-textarea>
+                <el-input type="textarea" v-model="item.description"></el-input>
               </el-form-item>
-              <el-form-item label="描述">
-                <el-textarea v-model="model.tips"></el-textarea>
+              <el-form-item label="小提示">
+                <el-input type="textarea" v-model="item.tips"></el-input>
               </el-form-item>
-            
+              <el-form-item>
+                <el-button size="small" type="danger" @click="model.skills.splice(i,1)">删除</el-button>
+              </el-form-item>
             </el-col>
           </el-row>
         </el-tab-pane>
@@ -187,14 +189,14 @@ export default {
 .items-uploader-icon {
   font-size: 28px;
   color: #8c939d;
-  width: 178px;
-  height: 178px;
-  line-height: 178px;
+  width: 5rem;
+  height: 5rem;
+  line-height: 5rem;
   text-align: center;
 }
 .items {
-  width: 178px;
-  height: 178px;
+  width: 5rem;
+  height: 5rem;
   display: block;
 }
 </style>

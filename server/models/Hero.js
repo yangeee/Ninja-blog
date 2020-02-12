@@ -15,7 +15,7 @@ const schema = new mongoose.Schema({
   },
   skills:[{
     icon:{type:String},
-    nme:{type:String},
+    name:{type:String},
     description:{type:String},
     tips:{type:String},
   }],
