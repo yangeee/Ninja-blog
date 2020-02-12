@@ -13,6 +13,12 @@ const schema = new mongoose.Schema({
     attack: {type: Number}
 
   },
+  skills:[{
+    icon:{type:String},
+    nme:{type:String},
+    description:{type:String},
+    tips:{type:String},
+  }],
   items1: [{type: mongoose.SchemaTypes.ObjectId, ref:'Item'}],
   items2: [{type: mongoose.SchemaTypes.ObjectId, ref:'Item'}],
   usageTips: {type: String},
