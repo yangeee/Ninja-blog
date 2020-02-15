@@ -37,7 +37,7 @@ export default {
       this.items = res.data
     },
     async remove(row) {
-      this.$confirm(`将永久删除 <<${row.title}>> 文章, 是否继续?`, '提示', {
+      this.$confirm(`将永久删除《${row.title}》文章, 是否继续?`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
