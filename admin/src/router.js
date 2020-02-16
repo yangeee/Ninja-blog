@@ -5,10 +5,12 @@ import CategoryEdit from './views/CategoryEdit.vue'
 import CategoryList from './views/CategoryList.vue'
 import ItemEdit from './views/ItemEdit.vue'
 import ItemList from './views/ItemList.vue'
-import HeroesEdit from './views/HeroesEdit.vue'
-import HeroesList from './views/HeroesList.vue'
+import HeroEdit from './views/HeroEdit.vue'
+import HeroList from './views/HeroList.vue'
 import ArticleEdit from './views/ArticleEdit.vue'
 import ArticleList from './views/ArticleList.vue'
+import AdEdit from './views/AdEdit.vue'
+import AdList from './views/AdList.vue'
 
 Vue.use(Router)
 
@@ -47,15 +49,15 @@ export default new Router({
         },
         {
           path: 'heroes/create',
-          component: HeroesEdit
+          component: HeroEdit
         },
         {
           path: 'heroes/list',
-          component: HeroesList
+          component: HeroList
         },
         {
           path: 'heroes/edit/:id',
-          component: HeroesEdit,
+          component: HeroEdit,
           props: true
         },
         {
@@ -69,6 +71,19 @@ export default new Router({
         {
           path: 'articles/edit/:id',
           component: ArticleEdit,
+          props: true
+        },
+        {
+          path: 'ads/create',
+          component: AdEdit
+        },
+        {
+          path: 'ads/list',
+          component: AdList
+        },
+        {
+          path: 'ads/edit/:id',
+          component: AdEdit,
           props: true
         }
       ]
