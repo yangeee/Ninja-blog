@@ -11,6 +11,8 @@ import ArticleEdit from './views/ArticleEdit.vue'
 import ArticleList from './views/ArticleList.vue'
 import AdEdit from './views/AdEdit.vue'
 import AdList from './views/AdList.vue'
+import AdminUserEdit from './views/AdminUserEdit.vue'
+import AdminUserList from './views/AdminUserList.vue'
 
 Vue.use(Router)
 
@@ -84,6 +86,19 @@ export default new Router({
         {
           path: 'ads/edit/:id',
           component: AdEdit,
+          props: true
+        },
+        {
+          path: 'admin_user/create',
+          component: AdminUserEdit
+        },
+        {
+          path: 'admin_user/list',
+          component: AdminUserList
+        },
+        {
+          path: 'admin_user/edit/:id',
+          component: AdminUserEdit,
           props: true
         }
       ]
