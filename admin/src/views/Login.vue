@@ -25,12 +25,19 @@ export default {
       model: {
         password:'',
         username:''
+
       }
     }
   },
   methods:{
-    login(){
-      console.log(this.model)
+    async login(){
+      const res = await this.$http.post('login', this.model)
+      localStorage.token = res.data.token
+      this.$router.push('/')
+      this.$message({
+        type: 'success',
+        message: `登录成功，欢迎您 ${res.data.username}`
+      })
     }
   }
 }

@@ -46,10 +46,36 @@ module.exports = app => {
   app.use(
     '/admin/api/rest/:resource', //api的url命名
     async (req, res, next) => {
-      const modelName = require('inflection').classify(req.params.resource)//将路径名变成首字母大写的数据库字段格式
+      const modelName = require('inflection').classify(req.params.resource) //将路径名变成首字母大写的数据库字段格式
       req.Model = require(`../../models/${modelName}`)
       next()
     }, //从请求中得到所请求的资源种类名，自动添加到
     router
   ) //再使用 express.Router类来让每一个请求前面自动加上这个路径
+
+  app.post('/admin/api/login', async (req, res) => {
+    const { username, password } = req.body
+    //根据用户名找用户
+    const AdminUser = require('../../models/AdminUser')
+    const User = await AdminUser.findOne({ username }).select('+password')
+    if (!User) {
+      return res.status(422).send({
+        message: '用户不存在'
+      })
+    }
+    //校验密码
+    const isValid = require('bcrypt').compareSync(password, User.password)
+    if (!isValid) {
+      return res.status(422).send({
+        message: '密码错误'
+      })
+    }
+    //返回token
+    const jwt = require('jsonwebtoken')
+    const token  = jwt.sign({ id: User._id}, app.get('secret'))
+    res.send({
+      token,
+      username: User.username
+    })
+  })
 }

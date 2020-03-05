@@ -1,6 +1,7 @@
 const express = require('express')
 
 const app = new express()
+app.set('secret', 'fowihwehrweriowh')
 
 app.use(require('cors')()) //允许跨域
 app.use(express.json()) //对前端传过来的数据进行json解析
