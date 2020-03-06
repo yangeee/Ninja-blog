@@ -1,6 +1,6 @@
 import axios from 'axios'
 import Vue from 'vue'
-import router from "../router";
+import router from '../router'
 
 const http = axios.create({
   baseURL: 'http://localhost:3000/admin/api'
@@ -23,17 +23,18 @@ http.interceptors.response.use(
     return res
   },
   err => {
-    if(err.response.data.message){
+    if (err.response.data.message) {
+      // 当有多个接口报错时，防止弹出多个框
+      Vue.prototype.$message.closeAll()
       Vue.prototype.$message({
         type: 'error',
         message: err.response.data.message
       })
     }
-    if(err.response.status === 401){
+    if (err.response.status === 401) {
       router.push('/login')
     }
     return Promise.reject(err)
   }
-  
 )
 export default http
