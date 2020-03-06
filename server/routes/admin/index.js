@@ -3,6 +3,8 @@ module.exports = app => {
   const jwt = require('jsonwebtoken')
   const AdminUser = require('../../models/AdminUser')
   const assert = require('http-assert')
+  const authMiddleware = require('../../middleware/auth')
+  const resourceMiddleware = require('../../middleware/resource')
   const router = express.Router({
     mergeParams: true
   }) //router代表/admin/api/rest/:resource
@@ -25,32 +27,16 @@ module.exports = app => {
     })
   })
   // 资源列表
-  router.get(
-    '/',
-    async (req, res, next) => {
-      //请求头后端要用小写开头，会自动对应
-      const token = String(req.headers.authorization || '')
-        .split(' ')
-        .pop()
-      assert(token, 401, '登录错误，请重新登录')
-      const { id } = jwt.verify(token, app.get('secret'))
-      assert(id, 401, '登录错误，请重新登录')
-      //必须挂载在req、res才能给下一个函数使用
-      req.user = await AdminUser.findById(id)
-      assert(req.user, 401, '请先登录')
-      await next()
-    },
-    async (req, res) => {
-      const queryOptions = {}
-      if (req.Model.modelName === 'Category') {
-        queryOptions.populate = 'parent'
-      }
-      const items = await req.Model.find()
-        .setOptions(queryOptions)
-        .limit() //调用数据库的表头create方法创建数据
-      res.send(items)
+  router.get('/', async (req, res) => {
+    const queryOptions = {}
+    if (req.Model.modelName === 'Category') {
+      queryOptions.populate = 'parent'
     }
-  )
+    const items = await req.Model.find()
+      .setOptions(queryOptions)
+      .limit() //调用数据库的表头create方法创建数据
+    res.send(items)
+  })
   // 资源详情（已登录）
   router.get('/:id', async (req, res) => {
     const model = await req.Model.findById(req.params.id)
@@ -70,12 +56,9 @@ module.exports = app => {
 
   //封装通用接口
   app.use(
-    '/admin/api/rest/:resource', //api的url命名
-    async (req, res, next) => {
-      const modelName = require('inflection').classify(req.params.resource) //将路径名变成首字母大写的数据库字段格式
-      req.Model = require(`../../models/${modelName}`)
-      next()
-    }, //从请求中得到所请求的资源种类名，自动添加到
+    '/admin/api/rest/:resource', //动态路径参数,存入req.params.resource
+    authMiddleware(),
+    resourceMiddleware(),
     router
   ) //再使用 express.Router类来让每一个请求前面自动加上这个路径
 
@@ -104,8 +87,7 @@ module.exports = app => {
   })
 
   // 错误处理函数
-  app.use(async (err, req, res, next)=>{
-    console.log(err.status)
+  app.use(async (err, req, res, next) => {
     res.status(err.status || 500).send({
       message: err.message
     })
