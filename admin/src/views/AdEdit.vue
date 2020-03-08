@@ -15,7 +15,8 @@
               <el-form-item label="图标" style="margin-top:0.8rem;">
                 <el-upload
                   class="items-uploader"
-                  :action="$http.defaults.baseURL+'/upload'"
+                  :action="mixin_getUploadUrl"
+                  :headers="mixin_getAuthHeaders()"
                   :show-file-list="false"
                   :on-success="res => $set(item,'image', res.url)"
                 >
