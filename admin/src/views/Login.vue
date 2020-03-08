@@ -25,7 +25,6 @@ export default {
       model: {
         password:'',
         username:''
-
       }
     }
   },
@@ -38,6 +37,7 @@ export default {
         type: 'success',
         message: `登录成功，欢迎您 ${res.data.username}`
       })
+      this.$store.commit('change_username', res.data.username)
     }
   }
 }
