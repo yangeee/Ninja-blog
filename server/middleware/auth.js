@@ -11,8 +11,8 @@ module.exports = options => {
     const { id } = jwt.verify(token, res.app.get('secret'))
     assert(id, 401, '登录错误，请重新登录')
     //必须挂载在req、res才能给下一个函数使用
-    req.user = await AdminUser.findById(id)
-    assert(req.user, 401, '请先登录')
+    const user = await AdminUser.findById(id)
+    assert(user, 401, '请先登录')
     await next()
   }
 }
