@@ -99,7 +99,9 @@ export default {
         localStorage.token = ''
         this.$router.push('/login')
       }
+
     },
+
   },
   watch: {
     $route() {
