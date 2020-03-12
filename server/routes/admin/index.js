@@ -5,6 +5,8 @@ module.exports = app => {
   const assert = require('http-assert')
   const authMiddleware = require('../../middleware/auth')
   const resourceMiddleware = require('../../middleware/resource')
+  const multer = require('multer')
+
   const router = express.Router({
     mergeParams: true
   }) //router代表/admin/api/rest/:resource
@@ -42,9 +44,23 @@ module.exports = app => {
     const model = await req.Model.findById(req.params.id)
     res.send(model)
   })
+ //视频上传接口
+ var storage = multer.diskStorage({
+  destination: __dirname + '../../../videos',
+  filename: function(req, file, cb) {
+    cb(null, 'output.mp4')
+  }
+})
+const uploadVideo = multer({
+  storage: storage
+})
 
+app.post('/admin/api/video', uploadVideo.single('file'), async (req, res) => {
+  const file = req.file
+  file.url = `http://localhost:3000/videos/${file.filename}`
+  res.send(file)
+})
   //图片上传接口
-  const multer = require('multer')
   const upload = multer({
     dest: __dirname + '../../../uploads'
   })
@@ -53,6 +69,7 @@ module.exports = app => {
     file.url = `http://localhost:3000/uploads/${file.filename}`
     res.send(file)
   })
+ 
 
   //封装通用接口
   app.use(
