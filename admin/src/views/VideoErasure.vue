@@ -15,7 +15,7 @@
         >
           <i class="el-icon-plus items-uploader-icon"></i>
         </el-upload>
-        <a href="http://localhost:3000/videos/output.mp4">点击下载</a>
+        <a :href="model.video">点击下载</a>
       </el-form-item> 
       <el-form-item>
         <el-button type="primary" native-type="submit">保存</el-button>
@@ -35,7 +35,7 @@ export default {
     return {
       model: {
         name: '',
-        video: ''
+        video: '#'
       },
     }
   },

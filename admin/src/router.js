@@ -15,6 +15,8 @@ import AdminUserEdit from './views/AdminUserEdit.vue'
 import AdminUserList from './views/AdminUserList.vue'
 import Login from './views/Login.vue'
 import VideoErasure from './views/VideoErasure.vue'
+import AudioCut from './views/AudioCut.vue'
+
 
 
 Vue.use(Router)
@@ -57,11 +59,15 @@ const router = new Router({
         { path: 'admin_user/edit/:id', component: AdminUserEdit, props: true },
 
         { path: 'video/erasure', component: VideoErasure },
+
+        { path: 'audio/cut', component: AudioCut },
+
       ]
     }
   ]
 })
 
+//路由守卫
 router.beforeEach((to, from, next) => {
   if (!to.matched.some(record => record.meta.isPublic) && !localStorage.token) {
     next('/login')

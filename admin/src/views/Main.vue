@@ -25,6 +25,7 @@
           <el-menu-item-group>
             <template slot="title">视频</template>
             <el-menu-item index="/video/erasure">视频消音</el-menu-item>
+            <el-menu-item index="/audio/cut">音频裁剪</el-menu-item>
           </el-menu-item-group>
           <!-- <el-submenu index="1-4">
             <template slot="title">选项4</template>

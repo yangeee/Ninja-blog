@@ -1,5 +1,6 @@
 module.exports = app => {
   const express = require('express')
+  const fs = require('fs')
   const jwt = require('jsonwebtoken')
   const AdminUser = require('../../models/AdminUser')
   const assert = require('http-assert')
@@ -7,6 +8,7 @@ module.exports = app => {
   const resourceMiddleware = require('../../middleware/resource')
   const multer = require('multer')
   const ffmpeg = require('fluent-ffmpeg')
+  const cryptoRandomString = require('crypto-random-string')
 
   const router = express.Router({
     mergeParams: true
@@ -47,19 +49,20 @@ module.exports = app => {
   })
 
   //视频上传接口
-
-  var storage = multer.diskStorage({
+  var videoStorage = multer.diskStorage({
     destination: __dirname + '../../../videos',
     filename: function(req, file, cb) {
       cb(null, 'input.mp4')
     }
   })
   const uploadVideo = multer({
-    storage: storage
+    storage: videoStorage
   })
 
   app.post('/admin/api/video', uploadVideo.single('file'), async (req, res) => {
     const file = req.file
+    var cryptoString = cryptoRandomString({ length: 10, type: 'base64' })
+    var houzhui = file.filename.substr(file.filename.indexOf('.'))
     ffmpeg(file.path)
       .on('start', commandLine => {
         console.log('执行命令: ' + commandLine)
@@ -71,11 +74,26 @@ module.exports = app => {
         console.log('完成')
       })
       .noAudio()
-      .save('./videos/output.mp4')
-    file.url = `http://localhost:3000/videos/${file.filename}`
+      .save(`./videos/${cryptoString}${houzhui}`)
+    file.url = `http://localhost:3000/videos/${cryptoString}${houzhui}`
     res.send(file)
   })
 
+  //音频上传接口
+  var audioStorage = multer.diskStorage({
+    destination: __dirname + '../../../audios',
+  })
+  const uploadAudio = multer({
+    storage: audioStorage
+  })
+  app.post('/admin/api/audio', uploadAudio.single('file'), async (req, res) => {
+    const file = req.file
+    // var cryptoString = cryptoRandomString({ length: 10, type: 'base64' })
+    var houzhui = file.originalname.substr(file.originalname.indexOf('.'))
+    fs.renameSync(file.path, `${file.path}${houzhui}`)
+    file.url = `http://localhost:3000/audios/${file.filename}${houzhui}`
+    res.send(file)
+  })
   //图片上传接口
   const upload = multer({
     dest: __dirname + '../../../uploads'
